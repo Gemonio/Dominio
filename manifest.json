@@ -1,0 +1,20 @@
+{
+  "name": "7BL Dominio",
+  "short_name": "7BL",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0b1220",
+  "theme_color": "#0b1220",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192/2563eb/ffffff?text=7BL",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://via.placeholder.com/512/2563eb/ffffff?text=7BL",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0b1220" />
+  <link rel="apple-touch-icon" href="https://via.placeholder.com/192/2563eb/ffffff?text=7BL" />
+  <title>7BL - Dominio</title>
+  <style>
+    /* ... (Tutto il tuo CSS rimane invariato) ... */
+    :root{
+      --bg0:#0b1220; --bg1:#0f172a; --text:#e5e7eb; --muted:#94a3b8;
+      --border:rgba(148,163,184,.18); --shadow:0 16px 40px rgba(0,0,0,.45);
+      --radius:20px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;padding:24px;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--text);
+    background: linear-gradient(to bottom, rgba(15,23,42,.88), rgba(11,18,32,.92)), url("7bl.png") center / 50% no-repeat;
+    background-color: #0b1220;
+    }
+    .container{max-width:980px;margin:0 auto}
+    h1{margin:0 0 8px;font-size:28px;letter-spacing:-.02em}
+    .topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px;
+      padding:14px 16px;border:1px solid var(--border);border-radius:var(--radius);
+      background:rgba(255,255,255,.04);box-shadow:var(--shadow);backdrop-filter:blur(6px)}
+    .rowFlex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    label{font-size:12px;color:var(--muted);font-weight:800;letter-spacing:.02em}
+    input[type=time]{height:38px;border-radius:12px;border:1px solid var(--border);padding:0 10px;background:rgba(11,18,32,.6);color:var(--text);font-weight:800}
+    select{height:38px;border-radius:12px;border:1px solid var(--border);padding:0 10px;background:rgba(11,18,32,.6);color:var(--text);font-weight:800;outline:none;appearance:none;padding-right:34px;}
+    .badge{font-size:12px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--border);white-space:nowrap}
+    .grid{display:grid;grid-template-columns:1fr;gap:16px}
+    @media(min-width:860px){.grid{grid-template-columns:1fr 1fr}h1{font-size:34px}}
+    .card{border:1px solid var(--border);border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));box-shadow:var(--shadow);padding:18px;position:relative;overflow:hidden;--accent:#2563eb;}
+    .card[data-color="Blu"]   { --accent:#2563eb; }
+    .card[data-color="Gialla"]{ --accent:#facc15; }
+    .card[data-color="Rossa"] { --accent:#ef4444; }
+    .card[data-color="Verde"] { --accent:#22c55e; }
+    .card::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg, var(--accent), transparent);opacity:.95;}
+    .row{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+    .title{margin:0;font-weight:950;font-size:18px}
+    .status{font-size:12px;color:var(--muted);margin-top:6px}
+    .status.running{color:#34d399;font-weight:900}
+    .timer{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:34px;font-weight:950;text-align:right}
+    .btn{width:100%;height:104px;border:0;border-radius:var(--radius);font-size:22px;font-weight:950;cursor:pointer;margin-top:14px;box-shadow:0 12px 24px rgba(0,0,0,.35);background:var(--accent);color:var(--text);transition:transform .05s ease;}
+    .small{flex:1;height:44px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);font-weight:700;cursor:pointer}
+    .colorDot{width:10px;height:10px;border-radius:999px;display:inline-block;background:var(--accent)}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>7BL - Dominio</h1>
+
+    <div class="topbar">
+      <div class="rowFlex">
+        <label for="stopAt">Stop alle</label>
+        <input id="stopAt" type="time" step="1" />
+      </div>
+      <div class="rowFlex">
+        <button id="resetAll" class="small">⚠️ Restart</button>
+        <span id="clockBadge" class="badge">Ora: --:--:--</span>
+        <span id="lockBadge" class="badge" style="display:none; color:#ef4444">⛔ STOP RAGGIUNTO</span>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- TIMER 1 -->
+      <section id="cardA" class="card" data-color="Gialla">
+        <div class="rowFlex">
+          <label>Squadra</label>
+          <span class="colorDot" id="dotA"></span>
+          <select id="colorA">
+            <option value="Blu">Blu</option>
+            <option value="Gialla" selected>Gialla</option>
+            <option value="Rossa">Rossa</option>
+            <option value="Verde">Verde</option>
+          </select>
+        </div>
+        <div class="row" style="margin-top:15px">
+          <div>
+            <h2 class="title">Dominio 1</h2>
+            <div id="statusA" class="status">In pausa</div>
+          </div>
+          <div class="timer" id="timeA">00:00.00</div>
+        </div>
+        <button id="btnA" class="btn">AVVIA / PAUSA</button>
+      </section>
+
+      <!-- TIMER 2 -->
+      <section id="cardB" class="card" data-color="Blu">
+        <div class="rowFlex">
+          <label>Squadra</label>
+          <span class="colorDot" id="dotB"></span>
+          <select id="colorB">
+            <option value="Blu" selected>Blu</option>
+            <option value="Gialla">Gialla</option>
+            <option value="Rossa">Rossa</option>
+            <option value="Verde">Verde</option>
+          </select>
+        </div>
+        <div class="row" style="margin-top:15px">
+          <div>
+            <h2 class="title">Dominio 2</h2>
+            <div id="statusB" class="status">In pausa</div>
+          </div>
+          <div class="timer" id="timeB">00:00.00</div>
+        </div>
+        <button id="btnB" class="btn">AVVIA / PAUSA</button>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // Registrazione Service Worker per PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+
+    // STATO
+    let active = null;
+    let elapsed = { a: 0, b: 0 };
+    let startStamp = 0;
+    let stopAtSec = null;
+    let locked = false;
+
+    // Carica dati salvati
+    const saved = JSON.parse(localStorage.getItem('7bl_state'));
+    if (saved) {
+      elapsed = saved.elapsed;
+      stopAtSec = saved.stopAtSec;
+    }
+
+    // DOM
+    const elements = {
+      timeA: document.getElementById('timeA'),
+      timeB: document.getElementById('timeB'),
+      statusA: document.getElementById('statusA'),
+      statusB: document.getElementById('statusB'),
+      btnA: document.getElementById('btnA'),
+      btnB: document.getElementById('btnB'),
+      cardA: document.getElementById('cardA'),
+      cardB: document.getElementById('cardB'),
+      stopAt: document.getElementById('stopAt'),
+      clockBadge: document.getElementById('clockBadge'),
+      lockBadge: document.getElementById('lockBadge')
+    };
+
+    function save() {
+      localStorage.setItem('7bl_state', JSON.stringify({ elapsed, stopAtSec }));
+    }
+
+    const fmt = (ms) => {
+      const s = Math.floor(ms / 1000);
+      const m = String(Math.floor(s / 60)).padStart(2, '0');
+      const ss = String(s % 60).padStart(2, '0');
+      const cs = String(Math.floor((ms % 1000) / 10)).padStart(2, '0');
+      return `${m}:${ss}.${cs}`;
+    };
+
+    function tick() {
+      if (!active || locked) return;
+      
+      const now = new Date();
+      const currentSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+      
+      if (stopAtSec && currentSec >= stopAtSec) {
+        locked = true;
+        active = null;
+        render();
+        return;
+      }
+
+      elapsed[active] = performance.now() - startStamp;
+      render();
+      save();
+      requestAnimationFrame(tick);
+    }
+
+    function start(which) {
+      if (locked) return;
+      if (active === which) {
+        active = null;
+      } else {
+        active = which;
+        startStamp = performance.now() - elapsed[which];
+        requestAnimationFrame(tick);
+      }
+      render();
+    }
+
+    function render() {
+      elements.timeA.textContent = fmt(elapsed.a);
+      elements.timeB.textContent = fmt(elapsed.b);
+      
+      elements.statusA.textContent = active === 'a' ? 'IN CORSO' : 'PAUSA';
+      elements.statusA.className = 'status' + (active === 'a' ? ' running' : '');
+      elements.statusB.textContent = active === 'b' ? 'IN CORSO' : 'PAUSA';
+      elements.statusB.className = 'status' + (active === 'b' ? ' running' : '');
+      
+      elements.clockBadge.textContent = "Ora: " + new Date().toLocaleTimeString();
+      elements.lockBadge.style.display = locked ? 'inline-block' : 'none';
+      
+      elements.btnA.disabled = locked;
+      elements.btnB.disabled = locked;
+    }
+
+    // Eventi
+    elements.btnA.onclick = () => start('a');
+    elements.btnB.onclick = () => start('b');
+    
+    document.getElementById('resetAll').onclick = () => {
+      if(confirm("Vuoi azzerare tutto?")) {
+        elapsed = {a:0, b:0}; active = null; locked = false;
+        save(); render();
+      }
+    };
+
+    elements.stopAt.oninput = (e) => {
+      const parts = e.target.value.split(':');
+      stopAtSec = parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60;
+      save();
+    };
+
+    document.getElementById('colorA').onchange = (e) => elements.cardA.setAttribute('data-color', e.target.value);
+    document.getElementById('colorB').onchange = (e) => elements.cardB.setAttribute('data-color', e.target.value);
+
+    setInterval(render, 1000);
+    render();
+  </script>
+</body>
+</html>
